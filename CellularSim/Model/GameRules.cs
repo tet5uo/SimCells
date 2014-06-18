@@ -26,7 +26,6 @@ namespace CellularSim.Model
             return false;
         }
 
-        //TODO !!! put this method into the GridExtentions class and rename the class GridHelpers.
         private static int CountLivingNeighbors(WrappingGrid<bool> state, int x, int y)
         {
             return new List<bool>() 
