@@ -15,29 +15,6 @@ namespace CellularSim.View
 {
     public static class ViewHelpers
     {
-        public static async Task<Dictionary<Point, FrameworkElement>> CreateCellsAndMapAsync(int sideLength, double scale)
-        {
-
-            var action = (Func<Dictionary<Point, FrameworkElement>>)(() =>
-            {
-                var dict = new Dictionary<Point, FrameworkElement>();
-                for (int x = 0; x < sideLength; x++)
-                {
-                    for (int y = 0; y < sideLength; y++)
-                    {
-                        var scaledLocation = new Point((scale * x), (scale * y));
-                        var cell = new CellControl() { Width = scale, Height = scale, };
-                        Canvas.SetLeft(cell, x * scale);
-                        Canvas.SetTop(cell, y * scale);
-                        dict.Add(new Point(x, y), cell);
-                    }
-                }
-                return dict;
-            });
-
-            return await App.Current.Dispatcher.InvokeAsync(action);
-        }
-
         public static Dictionary<Point, FrameworkElement> CreateGridOfCells(int sideLength, double scale)
         {
             var map = new Dictionary<Point, FrameworkElement>();
