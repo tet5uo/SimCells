@@ -20,6 +20,7 @@ namespace CellularSim.ViewModel
 {
     class GameViewModel : INotifyPropertyChanged
     {
+
         public Size ViewRenderSize { get; set; }
         private bool timerRunning = false;
         public bool HitTestEnabled { get { return !timerRunning; } }
@@ -170,8 +171,8 @@ namespace CellularSim.ViewModel
 
         private void model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
             var state = model.GameArea.ToCellList();
-
             for (int i = 0; i < Sprites.Count; i++)
             {
                 if (Sprites[i].State != state[i].State)
@@ -179,7 +180,7 @@ namespace CellularSim.ViewModel
                     Sprites[i].FlipState();
                 }             
             }
-                          
+            Console.WriteLine(stopwatch.Elapsed.Milliseconds);
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
