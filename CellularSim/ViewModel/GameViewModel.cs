@@ -39,10 +39,19 @@ namespace CellularSim.ViewModel
         private GameModel model;
         private DispatcherTimer timer = new DispatcherTimer();
 
-        private ObservableCollection<FrameworkElement> sprites = new ObservableCollection<FrameworkElement>();
-        public INotifyCollectionChanged Sprites { get { return sprites; } }
+        public ObservableCollection<Cell> Sprites { get; private set; }
 
-        private Dictionary<Point, FrameworkElement> spriteMap = new Dictionary<Point, FrameworkElement>();
+
+        public GameViewModel()
+        {
+            Sprites = new ObservableCollection<Cell>();
+            SimSize = GameSize.Large;
+            PercentRandomCells = 15;
+            model = new GameModel(rng);
+            model.PropertyChanged += model_PropertyChanged;
+            timer.Interval = TimeSpan.FromMilliseconds(64);
+            timer.Tick += timer_Tick;
+        }
 
         #region RelayCommands
 
@@ -65,7 +74,7 @@ namespace CellularSim.ViewModel
                 return startSimulationCommand ?? 
                     (startSimulationCommand = new RelayCommand(this.RunTimer, (arg) =>
                 {
-                    if (timer.IsEnabled || sprites.Count == 0) { return false; }
+                    if (timer.IsEnabled || Sprites.Count == 0) { return false; }
                     return true;
                 }));
             }
@@ -78,7 +87,7 @@ namespace CellularSim.ViewModel
                 return randomizeCellsCommand ??
                     (randomizeCellsCommand = new RelayCommand(this.EnableRandomCells, (arg) => 
                 {
-                    if (timer.IsEnabled || (sprites.Count == 0))
+                    if (timer.IsEnabled || (Sprites.Count == 0))
                     { 
                         return false; 
                     }
@@ -136,34 +145,21 @@ namespace CellularSim.ViewModel
                     default:
                         break;
                 }
-                sprites.Clear();
-                spriteMap.Clear();
+                Sprites.Clear();
                 SetScale(ViewRenderSize);
+                RaisePropertyChanged("SimWidth");
             }
             
         }
 
-        public GameViewModel()
-        {
-            SimSize = GameSize.Large;
-            PercentRandomCells = 15;
-            model = new GameModel(rng);
-            model.PropertyChanged += model_PropertyChanged;
-            timer.Interval = TimeSpan.FromMilliseconds(64);
-            timer.Tick += timer_Tick;
-        }
 
         private void NewGame(Object obj)
         {
+            Sprites.Clear();
             model.NewGame(SimSize);
-            if (spriteMap.Count == 0)
+            foreach (var cell in model.GameArea.ToCellList())
             {
-                var watch = System.Diagnostics.Stopwatch.StartNew();
-                spriteMap = ViewHelpers.CreateGridOfCells(SimWidth, Scale);
-                foreach (var sprite in spriteMap.Values)
-                {
-                    sprites.Add(sprite);
-                }
+                Sprites.Add(cell);
             }
         }
 
@@ -174,28 +170,16 @@ namespace CellularSim.ViewModel
 
         private void model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            foreach (Point location in spriteMap.Keys)
-            {
-                SyncSprite(spriteMap[location], model.GameArea[(int)location.X, (int)location.Y]);
-            }
-        }
+            var state = model.GameArea.ToCellList();
 
-        private void SyncSprite(FrameworkElement sprite, bool modelCellState)
-        {
-            if (modelCellState)
+            for (int i = 0; i < Sprites.Count; i++)
             {
-                if (!sprite.IsVisible)
+                if (Sprites[i].State != state[i].State)
                 {
-                    sprite.Visibility = Visibility.Visible;
-                }
+                    Sprites[i].FlipState();
+                }             
             }
-            else
-            {
-                if (sprite.IsVisible)
-                {
-                    sprite.Visibility = Visibility.Collapsed;
-                }
-            }
+                          
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
@@ -208,6 +192,7 @@ namespace CellularSim.ViewModel
         {
             ViewRenderSize = renderSize;
             Scale = ViewRenderSize.Width / ((double)SimSize);
+            RaisePropertyChanged("Scale");
         }
 
         private void RunTimer(Object obj) 

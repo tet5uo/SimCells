@@ -20,7 +20,8 @@ namespace CellularSim.Model
             }
             set
             {
-                SetAndRaisePropertyChanged(ref state, value);
+                state = value;
+                RaisePropertyChanged();
             }
         }
         public Point Location { get; private set; }
@@ -32,14 +33,16 @@ namespace CellularSim.Model
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        private void SetAndRaisePropertyChanged(ref bool field,  bool value, [CallerMemberName] string propName = "")
+        private void RaisePropertyChanged([CallerMemberName] string propName = "")
         {
-            if (!EqualityComparer<bool>.Default.Equals(value, field))
-            {
                 var handler = PropertyChanged;
-                field = value;
                 handler(this, new PropertyChangedEventArgs(propName));
             }
+
+        internal void FlipState()
+        {
+            state = !state;
+            RaisePropertyChanged("State");
         }
     }
 }
