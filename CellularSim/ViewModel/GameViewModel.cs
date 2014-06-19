@@ -171,7 +171,6 @@ namespace CellularSim.ViewModel
 
         private void model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
             var state = model.GameArea.ToCellList();
             for (int i = 0; i < Sprites.Count; i++)
             {
@@ -180,7 +179,6 @@ namespace CellularSim.ViewModel
                     Sprites[i].FlipState();
                 }             
             }
-            Console.WriteLine(stopwatch.Elapsed.Milliseconds);
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
