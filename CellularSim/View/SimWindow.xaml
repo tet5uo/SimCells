@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:CellularSim.View"
         xmlns:viewModel="clr-namespace:CellularSim.ViewModel"
-        Title="MainWindow" Height="620" Width="900" ResizeMode="CanMinimize">
+        Title="MainWindow" Height="620" Width="900" ResizeMode="CanMinimize" Background="#FFE8E8E8">
     <Window.Resources>
         <local:CellControl x:Key="cellControl"></local:CellControl>
         <viewModel:GameViewModel x:Key="viewModel"/>
@@ -14,7 +14,7 @@
             <Viewbox Stretch="Uniform" Margin="6,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Border Grid.Row="1" Grid.Column="1" Width="Auto" Height="Auto" 
                             BorderBrush="DarkGray" BorderThickness="6" CornerRadius="4">
-                    <ItemsControl Width="600" Height="600" Background="DarkBlue" ItemsSource="{Binding Sprites}" IsHitTestVisible="{Binding HitTestEnabled}">
+                    <ItemsControl Width="600" Height="600" Background="#FF000644" ItemsSource="{Binding Sprites}" IsHitTestVisible="{Binding HitTestEnabled}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Rectangle Fill="Goldenrod" Visibility="{Binding State, Converter={StaticResource boolToVis}}"></Rectangle>
@@ -28,15 +28,21 @@
                     </ItemsControl>
                 </Border>
             </Viewbox>
-            <StackPanel  Background="Snow" Height="Auto" Orientation="Vertical" Margin="12,10,10,10">
+            <StackPanel  Background="#FFFEFFF7" Height="Auto" Orientation="Vertical" Margin="12,10,10,10">
+                <StackPanel.Effect>
+                    <DropShadowEffect ShadowDepth="3" Opacity="0.75" Direction="310" BlurRadius="6"/>
+                </StackPanel.Effect>
                 <StackPanel>
-                    <TextBlock Margin="4" VerticalAlignment="Center">Grid Size</TextBlock>
-                        <StackPanel Orientation="Horizontal" DataContext="{Binding}">
-                            <RadioButton Content="Small" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
-                            <RadioButton Content="Medium" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
-                            <RadioButton Content="Large" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
-                            <RadioButton Content="VeryLarge" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
-                        </StackPanel>
+                    <StackPanel Margin="0,0,0,6" Orientation="Horizontal">
+                        <TextBlock Margin="0,0,4,0"><Run Text="Grid Size:  "/></TextBlock>
+                        <TextBlock Text="{Binding SimWidth}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DataContext="{Binding}">
+                        <RadioButton Content="Small" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, Mode=TwoWay, RelativeSource={RelativeSource Self}}"/>
+                        <RadioButton Content="Medium" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, Mode=TwoWay, RelativeSource={RelativeSource Self}}"/>
+                        <RadioButton IsChecked="True" Content="Large" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, Mode=TwoWay, RelativeSource={RelativeSource Self}}"/>
+                        <RadioButton Content="VeryLarge" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, Mode=TwoWay, RelativeSource={RelativeSource Self}}"/>
+                    </StackPanel>
                     <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
                         <TextBlock Margin="4"><Run Text="RandomFill Percent"/></TextBlock>
                         <TextBlock Margin="4" Text="{Binding PercentRandomCells}" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
@@ -47,7 +53,7 @@
                 <Button Height="30" Width="270" Margin="4" Content="Populate random Cells" Command="{Binding RandomizeCellsCommand}"/>
                 <Button Height="30" Width="270" Margin="4" Content="Start Simulation" Command="{Binding StartSimulationCommand}"/>
                 <Button Height="30" Width="270" Margin="4" Content="Stop" Command="{Binding StopSimCommand}"/>
-               
+
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -8,9 +8,9 @@ namespace CellularSim.Model
 {
     public enum GameSize
     {
-        Small = 16,
-        Medium = 32,
-        Large = 64,
-        VeryLarge = 150,
+        Small = 25,
+        Medium = 50,
+        Large = 75,
+        VeryLarge = 100,
     }
 }
