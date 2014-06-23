@@ -36,6 +36,7 @@ namespace CellularSim.ViewModel
             }
         }
 
+        public UInt64 Generation { get; private set; }
         public int Scale { get; private set; }
         public int SimWidth { get { return (int)SimSize; } }
         private GameModel model;
@@ -139,42 +140,44 @@ namespace CellularSim.ViewModel
                 }
                 BitmapHelpers.ClearImage(ImageSource);
                 SetScale();
+                model.NewGame(SimSize);
+                Generation = 0;
+                RaisePropertyChanged("Generation");
+                lastGenModelState = null;
+                RedrawDrawCells();
             }
             
         }
 
         public GameViewModel()
         {
-            SimSize = GameSize.VeryLarge;
+            SimSize = GameSize.Large;
+            SetScale();
             ImageSource = BitmapFactory.New(640, 640);
-            using (ImageSource.GetBitmapContext())
-            {
-                ImageSource.Clear(Colors.DarkBlue);
-            }
-            RaisePropertyChanged("ImageSource");
+            BitmapHelpers.ClearImage(ImageSource);
+            BitmapHelpers.DrawGridLines(ImageSource, (int)SimSize, Scale);
             PercentRandomCells = 15;
             model = new GameModel(rng);
-            model.PropertyChanged += model_PropertyChanged;
+            model.NewGame(SimSize);
             timer.Interval = TimeSpan.FromMilliseconds(64);
             timer.Tick += timer_Tick;
         }
 
         private void NewGame(Object obj)
         {
-            model.NewGame(SimSize);
+            Generation = 0;
+            RaisePropertyChanged("Generation");
             lastGenModelState = model.GameArea;
+            model.NewGame(SimSize);
+            RedrawDrawCells();
         }
 
         private void EnableRandomCells(Object obj)
         {
             model.ActivateRandomCells(PercentRandomCells);
-            BitmapHelpers.ClearImage(ImageSource);
+            Generation = 0;
+            RaisePropertyChanged("Generation");
             lastGenModelState = null;
-            RedrawDrawCells();
-        }
-
-        private void model_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
             RedrawDrawCells();
         }
 
@@ -199,24 +202,52 @@ namespace CellularSim.ViewModel
 
         void timer_Tick(object sender, object e)
         {
-            model.UpdateCells(GameRules.ConwayRules);
+            var w = System.Diagnostics.Stopwatch.StartNew();
             lastGenModelState = model.GameArea;
+            model.UpdateCells(GameRules.ConwayRules);
+            RedrawDrawCells();
+            Generation++;
+            RaisePropertyChanged("Generation");
+            var end = w.ElapsedMilliseconds;
         }
 
         private void RedrawDrawCells()
+        {
+            if (lastGenModelState == null)
+            {
+                DrawAllCells();
+            }
+            else 
+            {
+                DrawChangedCells();
+            }
+            BitmapHelpers.DrawGridLines(ImageSource, model.GameArea.Width, Scale);
+            RaisePropertyChanged("ImageSource");
+        }
+
+        private void DrawChangedCells()
         {
             for (int x = 0; x < model.GameArea.Width; x++)
             {
                 for (int y = 0; y < model.GameArea.Height; y++)
                 {
-                    if (lastGenModelState == null || lastGenModelState[x, y] != model.GameArea[x, y])
+                    if (lastGenModelState[x, y] != model.GameArea[x, y])
                     {
                         BitmapHelpers.DrawCell(ImageSource, x, y, model.GameArea[x, y], Scale);
                     }
                 }
             }
-            BitmapHelpers.DrawGridLines(ImageSource, model.GameArea.Width, Scale);
-            RaisePropertyChanged("ImageSource");
+        }
+
+        private void DrawAllCells()
+        {
+            for (int x = 0; x < model.GameArea.Width; x++)
+            {
+                for (int y = 0; y < model.GameArea.Height; y++)
+                {
+                    BitmapHelpers.DrawCell(ImageSource, x, y, model.GameArea[x, y], Scale);
+                }
+            }
         }
     }
 }

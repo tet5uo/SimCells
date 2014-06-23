@@ -25,5 +25,11 @@ namespace CellularSim
             InitializeComponent();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var vm = (CellularSim.ViewModel.GameViewModel)this.Resources["viewModel"];
+            vm.SetScale();
+        }
+
     }
 }

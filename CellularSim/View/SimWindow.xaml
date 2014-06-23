@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModel="clr-namespace:CellularSim.ViewModel"
-        Title="MainWindow" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+        Title="MainWindow" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+        Loaded="Window_Loaded">
     <Window.Resources>
         <viewModel:GameViewModel x:Key="viewModel"/>
     </Window.Resources>
@@ -19,7 +20,7 @@
                         <StackPanel Orientation="Horizontal" DataContext="{Binding}">
                             <RadioButton Content="Small" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
                             <RadioButton Content="Medium" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
-                            <RadioButton Content="Large" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
+                            <RadioButton IsChecked="True" Content="Large" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
                             <RadioButton Content="VeryLarge" Margin="6,0,6,0" Command="{Binding ChangeSizeCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}, Mode=TwoWay}"/>
                         </StackPanel>
                     <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
@@ -28,11 +29,14 @@
                     </StackPanel>
                     <Slider Value="{Binding PercentRandomCells, Mode=TwoWay}" Margin="0,12,0,12" TickPlacement="BottomRight" Maximum="50" Minimum="15" SmallChange="1"/>
                 </StackPanel>
-                <Button Height="30" Width="270" Margin="4" Content="New Sim" Command="{Binding NewGameCommand}"/>
+                <Button Height="30" Width="270" Margin="4" Content="Clear Cells" Command="{Binding NewGameCommand}"/>
                 <Button Height="30" Width="270" Margin="4" Content="Populate random Cells" Command="{Binding RandomizeCellsCommand}"/>
                 <Button Height="30" Width="270" Margin="4" Content="Start Simulation" Command="{Binding StartSimulationCommand}"/>
                 <Button Height="30" Width="270" Margin="4" Content="Stop" Command="{Binding StopSimCommand}"/>
-               
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="2,20,0,0">
+                    <TextBlock Text="Generation: "/>
+                    <TextBlock Margin="2,0" Text="{Binding Generation}"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

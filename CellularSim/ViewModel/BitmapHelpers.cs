@@ -31,13 +31,13 @@ namespace CellularSim.ViewModel
         {
             using (ImageSource.GetBitmapContext())
             {
-                ImageSource.Clear(Colors.DarkBlue);
+                ImageSource.Clear(Colors.Black);
             }
         }
 
         internal static void DrawGridLines(WriteableBitmap bmp, int gridLength, int Scale)
         {
-            var lineColor = Color.FromArgb(200, 0, 0, 0);
+            var lineColor = Color.FromArgb(200, 0, 50, 0);
             using (bmp.GetBitmapContext())
             {
                 for (int i = 0; i < 640; i = i + Scale)
