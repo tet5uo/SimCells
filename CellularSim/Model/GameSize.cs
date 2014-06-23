@@ -11,6 +11,6 @@ namespace CellularSim.Model
         Small = 16,
         Medium = 32,
         Large = 64,
-        VeryLarge = 150,
+        VeryLarge = 128,
     }
 }

@@ -25,14 +25,5 @@ namespace CellularSim
             InitializeComponent();
         }
 
-        private void Canvas_Loaded(object sender, RoutedEventArgs e)
-        {
-            var canvas = sender as Canvas;
-            if (canvas != null)
-            {
-                 var vm =  (CellularSim.ViewModel.GameViewModel)this.Resources["viewModel"];
-                 vm.SetScale(canvas.RenderSize);
-            }
-        }
     }
 }
