@@ -31,5 +31,15 @@ namespace CellularSim
             vm.SetScale();
         }
 
+        private void simImage_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var vm = (CellularSim.ViewModel.GameViewModel)this.Resources["viewModel"];
+            var cells = sender as FrameworkElement;
+            if (cells != null)
+            {
+                vm.OnCellClicked(e.GetPosition(this));
+            }
+        }
+
     }
 }

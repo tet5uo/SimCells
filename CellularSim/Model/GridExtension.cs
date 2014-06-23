@@ -44,6 +44,11 @@ namespace CellularSim.Model
             }
             return grid;
         }
+
+        public static void FlipCell(this WrappingGrid<bool> state, int x, int y)
+        {
+            state[x, y] = !state[x, y];
+        }
         
     }
 }

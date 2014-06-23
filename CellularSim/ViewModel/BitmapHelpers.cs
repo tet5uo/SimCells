@@ -13,14 +13,14 @@ namespace CellularSim.ViewModel
     {
         private static Random rng = new Random();
 
-        internal static void DrawCell(WriteableBitmap ImageSource, int xPos, int yPos, bool state, int scale)
+        internal static void DrawCell(WriteableBitmap ImageSource, int xPos, int yPos, bool state, int scale, Color brushcolor)
         {
             int xLeft = xPos * scale, 
                 xRight = (xPos * scale) + scale, 
                 yTop = (yPos * scale), 
                 yBottom = (yPos * scale) + scale;
 
-            var cellColor = state ? Colors.YellowGreen : Colors.Black;
+            var cellColor = state ? brushcolor : Colors.Black;
             using (ImageSource.GetBitmapContext())
             {
                 ImageSource.FillRectangle(xLeft, yTop, xRight, yBottom, cellColor);
@@ -37,7 +37,7 @@ namespace CellularSim.ViewModel
 
         internal static void DrawGridLines(WriteableBitmap bmp, int gridLength, int Scale)
         {
-            var lineColor = Color.FromArgb(50, 0, 200, 150);
+            var lineColor = Color.FromArgb(150, 0, 50, 0);
             using (bmp.GetBitmapContext())
             {
                 for (int i = 0; i < 640; i = i + Scale)
