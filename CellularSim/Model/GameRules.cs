@@ -41,6 +41,5 @@ namespace CellularSim.Model
             }.Where(e => e).Count();
         }
 
-       
     }
 }

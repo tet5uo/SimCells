@@ -20,7 +20,7 @@ namespace CellularSim.ViewModel
                 yTop = (yPos * scale), 
                 yBottom = (yPos * scale) + scale;
 
-            var cellColor = state ? Colors.Orange : Colors.Black;
+            var cellColor = state ? Colors.YellowGreen : Colors.Black;
             using (ImageSource.GetBitmapContext())
             {
                 ImageSource.FillRectangle(xLeft, yTop, xRight, yBottom, cellColor);
@@ -37,7 +37,7 @@ namespace CellularSim.ViewModel
 
         internal static void DrawGridLines(WriteableBitmap bmp, int gridLength, int Scale)
         {
-            var lineColor = Color.FromArgb(200, 0, 50, 0);
+            var lineColor = Color.FromArgb(50, 0, 200, 150);
             using (bmp.GetBitmapContext())
             {
                 for (int i = 0; i < 640; i = i + Scale)
